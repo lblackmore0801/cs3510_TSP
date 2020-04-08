@@ -1,1 +1,18 @@
+https://personal.vu.nl/r.a.sitters/AdvancedAlgorithms/2016/SlidesChapter2-2016.pdf
 
+Algorithm Double Tree:
+1. Find an MST
+2. Double the edges
+3. Find an Euler tour
+4. Cut short
+
+Nearest addition:
+1. Start with a tour on 2 points
+2. Keep adding the nearest point. 
+
+Christofides’ Algorithm
+1. Find a minimum spanning tree T
+2. Find a minimum matching M for the odd-degree vertices in T
+3. Add M to T
+4. Find an Euler tour
+5. Cut short
