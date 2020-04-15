@@ -28,16 +28,27 @@ def dist(node1, node2):
 
 distances, cities = create_graph(coords)
 
-def tsp(cities):
-    start = cities[0]
+def repeated_nn(cities):
+    tsp_tour = None
+    tour_length = float('inf')
+    for start in range(len(cities)):
+        tour, length = tsp_nn(cities, start)
+        if length < tour_length:
+            tsp_tour = tour
+            tour_length = length
+    return tsp_tour, tour_length
+
+def tsp_nn(cities, i):
+    start = cities[i]
     tour = [start]
-    cities.remove(start)
+    unvisited = set(cities)
+    unvisited.remove(start)
     total_length = 0
-    while cities:
-        nn, length = nearest_neighbor(tour[-1], cities)
+    while unvisited:
+        nn, length = nearest_neighbor(tour[-1], unvisited)
         total_length += length
         tour.append(nn)
-        cities.remove(nn)
+        unvisited.remove(nn)
     total_length += distances[tour[-1] - 1][start - 1]
     tour.append(start)
     return tour, total_length
@@ -52,6 +63,6 @@ def nearest_neighbor(prev_city, cities):
     return next_city, min_dist
     
 
-tsp_tour, tour_length = tsp(cities)
+tsp_tour, tour_length = repeated_nn(cities)
 print(tsp_tour)
 print(tour_length)
