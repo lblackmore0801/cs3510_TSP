@@ -17,7 +17,7 @@ class SimulatedAnnealing(object):
         for node in range(self.numof_nodes):
             self.nodes.append(node)
 
-        self.best_solution = None
+        self.best_solution = None      # equivalent to the tour of nodes
         self.best_dist = float("Inf")  # equivalent to the shortest tour length
         self.distance_list = []
 
@@ -49,7 +49,7 @@ class SimulatedAnnealing(object):
 
         solution.append(solution[0])
         curr_distance = self.path_dist(solution)
-
+        solution.remove(solution[-1])
         if curr_distance < self.best_dist:  # If best found so far, update best distance
             self.best_dist = curr_distance
             self.best_solution = solution
@@ -67,7 +67,9 @@ class SimulatedAnnealing(object):
     # decide if candidate should be accepted or not based on probability
     # CHANGED
     def accept(self, candidate):
+        candidate.append(candidate[0])
         candidate_dist = self.path_dist(candidate)
+        candidate.remove(candidate[-1])
         if candidate_dist < self.curr_distance:
             self.curr_distance, self.curr_solution = candidate_dist, candidate
             if candidate_dist < self.best_dist:
@@ -93,18 +95,8 @@ class SimulatedAnnealing(object):
             self.iteration += 1
 
             self.distance_list.append(self.curr_distance)
-
-        print("Best obtained: ", self.best_dist)
+        self.best_solution.append(self.best_solution[0])
+        print("Best path obtained: ", self.best_solution)
+        print("Best path length obtained: ", self.best_dist)
         improvement = 100 * (self.distance_list[0] - self.best_dist) / (self.distance_list[0])
         print(f"Improvement over greedy: {improvement : .2f}%")
-
-    def batch_anneal(self, times=10):
-        """
-        Execute simulated annealing algorithm `times` times, with random initial solutions.
-        """
-        for i in range(1, times + 1):
-            print(f"Iteration {i}/{times} -------------------------------")
-            self.temp = self.initial_temp
-            self.iteration = 1
-            self.curr_solution, self.curr_distance = self.initial_solution()
-            self.anneal()
