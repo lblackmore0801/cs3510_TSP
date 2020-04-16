@@ -15,5 +15,5 @@ with open(inputFile, 'r') as reader:
 
 
 if __name__ == "__main__":
-    sa = SimulatedAnnealing(coords, stopping_iter=10000)
+    sa = SimulatedAnnealing(coords, outputFile, stopping_iter=10000)
     sa.anneal()

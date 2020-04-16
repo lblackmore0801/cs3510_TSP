@@ -3,8 +3,9 @@ import random
 import sys
 
 class SimulatedAnnealing(object):
-    def __init__(self, coords, temp=-1, alpha=-1, stopping_temp=-1, stopping_iter=-1):
+    def __init__(self, coords, outputFile, temp=-1, alpha=-1, stopping_temp=-1, stopping_iter=-1):
         self.coords = coords
+        self.outputFile = outputFile
         self.numof_nodes = len(coords)
         self.temp = math.sqrt(self.numof_nodes) if temp == -1 else temp
         self.initial_temp = self.temp  # save inital T to reset if batch annealing is used
@@ -96,6 +97,9 @@ class SimulatedAnnealing(object):
 
             self.distance_list.append(self.curr_distance)
         self.best_solution.append(self.best_solution[0])
+        file = open(self.outputFile, "a")
+        file.write("Best path obtained: {}\n".format(self.best_solution))
+        file.write("Best path length obtained: {}\n".format(self.best_dist))
         print("Best path obtained: ", self.best_solution)
         print("Best path length obtained: ", self.best_dist)
         improvement = 100 * (self.distance_list[0] - self.best_dist) / (self.distance_list[0])
