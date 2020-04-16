@@ -18,14 +18,14 @@ class SimulatedAnnealing(object):
             self.nodes.append(node)
 
         self.best_solution = None
-        self.best_fitness = float("Inf")  # equivalent to the shortest tour length
-        self.fitness_list = []
+        self.best_dist = float("Inf")  # equivalent to the shortest tour length
+        self.distance_list = []
 
     # calculate the euclidean distance between two points
     # CHANGED
     def dist(self, node1, node2):
         d = [self.coords[node1][0] - self.coords[node2][0], self.coords[node1][1] - self.coords[node2][1]]
-        return round(math.sqrt(d[0] ** 2 + d[1] ** 2))    
+        return round(math.sqrt(d[0] ** 2 + d[1] ** 2))
 
     # nearest neighbor
     # CHANGED
@@ -48,54 +48,43 @@ class SimulatedAnnealing(object):
             start_node = next_node
 
         solution.append(solution[0])
-        curr_fitness = self.fitness(solution)
+        curr_distance = self.path_dist(solution)
 
-        if curr_fitness < self.best_fitness:  # If best found so far, update best fitness
-            self.best_fitness = curr_fitness
+        if curr_distance < self.best_dist:  # If best found so far, update best distance
+            self.best_dist = curr_distance
             self.best_solution = solution
-        self.fitness_list.append(curr_fitness)
-        return solution, curr_fitness
+        self.distance_list.append(curr_distance)
+        return solution, curr_distance
 
-    def fitness(self, solution):
-        """
-        Total distance of the current solution path.
-        """
-        cur_fit = 0
+    # distance of current path
+    # CHANGED
+    def path_dist(self, solution):
+        curr_dist = 0
         for i in range(self.numof_nodes):
-            cur_fit += self.dist(solution[i % self.numof_nodes], solution[(i + 1) % self.numof_nodes])
-        return cur_fit
+            curr_dist += self.dist(solution[i % self.numof_nodes], solution[(i + 1) % self.numof_nodes])
+        return curr_dist
 
-    def p_accept(self, candidate_fitness):
-        """
-        Probability of accepting if the candidate is worse than current.
-        Depends on the current temperature and difference between candidate and current.
-        """
-        return math.exp(-abs(candidate_fitness - self.cur_fitness) / self.temp)
-
+    # decide if candidate should be accepted or not based on probability
+    # CHANGED
     def accept(self, candidate):
-        """
-        Accept with probability 1 if candidate is better than current.
-        Accept with probabilty p_accept(..) if candidate is worse.
-        """
-        candidate_fitness = self.fitness(candidate)
-        if candidate_fitness < self.cur_fitness:
-            self.cur_fitness, self.cur_solution = candidate_fitness, candidate
-            if candidate_fitness < self.best_fitness:
-                self.best_fitness, self.best_solution = candidate_fitness, candidate
+        candidate_dist = self.path_dist(candidate)
+        if candidate_dist < self.curr_distance:
+            self.curr_distance, self.curr_solution = candidate_dist, candidate
+            if candidate_dist < self.best_dist:
+                self.best_dist, self.best_solution = candidate_dist, candidate
         else:
-            if random.random() < self.p_accept(candidate_fitness):
-                self.cur_fitness, self.cur_solution = candidate_fitness, candidate
+            prob_acceptance = math.exp(-abs(candidate_dist - self.curr_distance) / self.temp)
+            if random.random() < self.p_accept(candidate_dist):
+                self.curr_distance, self.curr_solution = candidate_dist, candidate
 
+    # run annealing algo
+    # CHANGED
     def anneal(self):
-        """
-        Execute simulated annealing algorithm.
-        """
-        # Initialize with the greedy solution.
-        self.cur_solution, self.cur_fitness = self.initial_solution()
+        self.curr_solution, self.curr_distance = self.initial_solution()
 
-        print("Starting annealing.")
+        print("Start:")
         while self.temp >= self.stopping_temp and self.iteration < self.stopping_iter:
-            candidate = list(self.cur_solution)
+            candidate = list(self.curr_solution)
             l = random.randint(2, self.numof_nodes - 1)
             i = random.randint(0, self.numof_nodes - l)
             candidate[i : (i + l)] = reversed(candidate[i : (i + l)])
@@ -103,11 +92,11 @@ class SimulatedAnnealing(object):
             self.temp *= self.alpha
             self.iteration += 1
 
-            self.fitness_list.append(self.cur_fitness)
+            self.distance_list.append(self.curr_distance)
 
-        print("Best fitness obtained: ", self.best_fitness)
-        improvement = 100 * (self.fitness_list[0] - self.best_fitness) / (self.fitness_list[0])
-        print(f"Improvement over greedy heuristic: {improvement : .2f}%")
+        print("Best obtained: ", self.best_dist)
+        improvement = 100 * (self.distance_list[0] - self.best_dist) / (self.distance_list[0])
+        print(f"Improvement over greedy: {improvement : .2f}%")
 
     def batch_anneal(self, times=10):
         """
@@ -117,5 +106,5 @@ class SimulatedAnnealing(object):
             print(f"Iteration {i}/{times} -------------------------------")
             self.temp = self.initial_temp
             self.iteration = 1
-            self.cur_solution, self.cur_fitness = self.initial_solution()
+            self.curr_solution, self.curr_distance = self.initial_solution()
             self.anneal()
