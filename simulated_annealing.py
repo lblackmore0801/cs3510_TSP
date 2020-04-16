@@ -74,7 +74,7 @@ class SimulatedAnnealing(object):
                 self.best_dist, self.best_solution = candidate_dist, candidate
         else:
             prob_acceptance = math.exp(-abs(candidate_dist - self.curr_distance) / self.temp)
-            if random.random() < self.p_accept(candidate_dist):
+            if random.random() < prob_acceptance:
                 self.curr_distance, self.curr_solution = candidate_dist, candidate
 
     # run annealing algo
