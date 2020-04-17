@@ -1,11 +1,13 @@
 import math
 import random
 import sys
+import time
 
 class SimulatedAnnealing(object):
-    def __init__(self, coords, outputFile, temp=-1, alpha=-1, stopping_temp=-1, stopping_iter=-1):
+    def __init__(self, coords, outputFile, duration, temp=-1, alpha=-1, stopping_temp=-1, stopping_iter=-1):
         self.coords = coords
         self.outputFile = outputFile
+        self.duration = float(duration)
         self.numof_nodes = len(coords)
         self.temp = math.sqrt(self.numof_nodes) if temp == -1 else temp
         self.alpha = 0.995 if alpha == -1 else alpha
@@ -80,7 +82,12 @@ class SimulatedAnnealing(object):
         self.curr_solution, self.curr_distance = self.initial_solution()
 
         print("Start:")
+        endTime = time.time() + self.duration
         while self.temp >= self.stopping_temp and self.iteration < self.stopping_iter:
+            if time.time() > endTime:
+                print("Algorithm Timeout")
+                file.write("Algorithm Timeout\n")
+                break
             candidate = list(self.curr_solution)
             l = random.randint(2, self.numof_nodes - 1)
             i = random.randint(0, self.numof_nodes - l)
@@ -94,5 +101,6 @@ class SimulatedAnnealing(object):
         file = open(self.outputFile, "a")
         file.write("Best path obtained: {}\n".format(self.best_solution))
         file.write("Best path length obtained: {}\n".format(self.best_dist))
+        file.write("\n")
         print("Best path obtained: ", self.best_solution)
         print("Best path length obtained: ", self.best_dist)
