@@ -13,8 +13,25 @@ return the solution tour and the tour length
 
 2. Select a new candidate tour. This was implemented by selecting two random points and reversing the path that was between them.
 
+select random node1
+select random node2
+iterate through nodes in reverse order
+
 3. If this candidate tour has a shorter tour length, accept it and store the solution and tour length.
+
+add first node to end of tour to create full loop
+calculate distance of candidate tour
+if the new distance is less than the distance that was stored
+    update values
 
 4. If the candidate tour is longer than the current solution, there is a still a chance that it will be accepted.
 
+calculate probability between new distance and stored distance
+if calculated probability of new distance is high
+    update values with new distance
+
 5. Go back to step 2 and repeat a certain number of iterations, decreasing the temperature by an alpha factor each iteration.
+
+update temp value based on alpha
+update iteration by 1
+add distance to running list of distances
