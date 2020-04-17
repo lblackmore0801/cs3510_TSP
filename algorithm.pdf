@@ -1,18 +1,20 @@
-https://personal.vu.nl/r.a.sitters/AdvancedAlgorithms/2016/SlidesChapter2-2016.pdf
+Our group developed a simulated annealing algorithm in order to solve the traveling salesman problem (TSP). The algorithm is based on the practice of annealing glass or metal, which is the process of raising the material to a high temperature and then gradually reducing the temperature. This allows the material to grow outwards in local areas leading to less stress. Using this process, simulated annealing randomly changes an original path based on a logical, decreasing temperature.
 
-Algorithm Double Tree:
-1. Find an MST
-2. Double the edges
-3. Find an Euler tour
-4. Cut short
+1. Start with a random tour. This was implemented using the nearest neighbor algorithm. Store this solution and its tour length for later comparisons. The pseudocode below is what the initial_solution function in our code is based on.
 
-Nearest addition:
-1. Start with a tour on 2 points
-2. Keep adding the nearest point. 
+select a random start node
+add that start node to a solution array
+create a set of unvisited nodes that includes all points except the starting one
+while there are still nodes in the unvisited set:
+  select the nearest neighbor to the most recently visited node
+  add that node to the solution
+  remove that node from the unvisited set
+return the solution tour and the tour length
 
-Christofides’ Algorithm
-1. Find a minimum spanning tree T
-2. Find a minimum matching M for the odd-degree vertices in T
-3. Add M to T
-4. Find an Euler tour
-5. Cut short
+2. Select a new candidate tour. This was implemented by selecting two random points and reversing the path that was between them.
+
+3. If this candidate tour has a shorter tour length, accept it and store the solution and tour length.
+
+4. If the candidate tour is longer than the current solution, there is a still a chance that it will be accepted.
+
+5. Go back to step 2 and repeat a certain number of iterations, decreasing the temperature by an alpha factor each iteration.
