@@ -8,7 +8,6 @@ class SimulatedAnnealing(object):
         self.outputFile = outputFile
         self.numof_nodes = len(coords)
         self.temp = math.sqrt(self.numof_nodes) if temp == -1 else temp
-        self.initial_temp = self.temp  # save inital T to reset if batch annealing is used
         self.alpha = 0.995 if alpha == -1 else alpha
         self.stopping_temp = 1e-8 if stopping_temp == -1 else stopping_temp
         self.stopping_iter = 100000 if stopping_iter == -1 else stopping_iter
@@ -23,13 +22,11 @@ class SimulatedAnnealing(object):
         self.distance_list = []
 
     # calculate the euclidean distance between two points
-    # CHANGED
     def dist(self, node1, node2):
         d = [self.coords[node1][0] - self.coords[node2][0], self.coords[node1][1] - self.coords[node2][1]]
         return round(math.sqrt(d[0] ** 2 + d[1] ** 2))
 
     # nearest neighbor
-    # CHANGED
     def initial_solution(self):
         start_node = random.choice(self.nodes)  # start from a random node
         solution = [start_node]
@@ -58,7 +55,6 @@ class SimulatedAnnealing(object):
         return solution, curr_distance
 
     # distance of current path
-    # CHANGED
     def path_dist(self, solution):
         curr_dist = 0
         for i in range(self.numof_nodes):
@@ -66,7 +62,6 @@ class SimulatedAnnealing(object):
         return curr_dist
 
     # decide if candidate should be accepted or not based on probability
-    # CHANGED
     def accept(self, candidate):
         candidate.append(candidate[0])
         candidate_dist = self.path_dist(candidate)
@@ -81,7 +76,6 @@ class SimulatedAnnealing(object):
                 self.curr_distance, self.curr_solution = candidate_dist, candidate
 
     # run annealing algo
-    # CHANGED
     def anneal(self):
         self.curr_solution, self.curr_distance = self.initial_solution()
 
@@ -94,13 +88,11 @@ class SimulatedAnnealing(object):
             self.accept(candidate)
             self.temp *= self.alpha
             self.iteration += 1
-
             self.distance_list.append(self.curr_distance)
+
         self.best_solution.append(self.best_solution[0])
         file = open(self.outputFile, "a")
         file.write("Best path obtained: {}\n".format(self.best_solution))
         file.write("Best path length obtained: {}\n".format(self.best_dist))
         print("Best path obtained: ", self.best_solution)
         print("Best path length obtained: ", self.best_dist)
-        improvement = 100 * (self.distance_list[0] - self.best_dist) / (self.distance_list[0])
-        print(f"Improvement over greedy: {improvement : .2f}%")
