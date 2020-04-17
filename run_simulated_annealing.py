@@ -4,7 +4,7 @@ import sys
 
 inputFile = sys.argv[1]
 outputFile = sys.argv[2]
-time = sys.argv[3]
+duration = sys.argv[3]
 
 coords = []
 with open(inputFile, 'r') as reader:
@@ -15,5 +15,6 @@ with open(inputFile, 'r') as reader:
 
 
 if __name__ == "__main__":
-    sa = SimulatedAnnealing(coords, outputFile, stopping_iter=10000)
+    sa = SimulatedAnnealing(coords, outputFile, duration stopping_iter=10000)
     sa.anneal()
+    
