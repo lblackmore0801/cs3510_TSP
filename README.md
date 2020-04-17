@@ -4,7 +4,7 @@ Submitted: April 17, 2020
 
 ### Group Members
 * Lindsey Blackmore | lblackmore3@gatech.edu 
-* Shivanee Persaud  |  
+* Shivanee Persaud  | spersaud3@gatech.edu
 
 ### Files
 * simulated_annealing.py: script that will perform simulated annealing on a given input of coordinates and will write the solution to the given output file within a given time period
