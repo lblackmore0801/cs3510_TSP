@@ -17,4 +17,4 @@ Submitted: April 17, 2020
 Since this is a python program, it does not need to be compiled by the user. To run our simulated annealing algorithm, open a terminal and enter "python3 run_simulated_annealing.py <input-coordinates.txt> <output-tour.txt> <time>". The results will be written to output-tour.txt.
   
 ### Limitations
-This algorithm has a random component so occasionally the path length that is output is not under 29,000. However, during our testing the range of outputs we encountered was roughly 27,600 to 29,800.
+This algorithm has a random component so occasionally the path length that is output is not under 29,000. However, during our testing the range of outputs we encountered was roughly 27,600 to 30,300.
